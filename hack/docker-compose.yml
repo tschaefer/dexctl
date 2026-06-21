@@ -1,0 +1,15 @@
+---
+services:
+  dex:
+    container_name: dex
+    image: ghcr.io/dexidp/dex:v2.45.1-alpine
+    volumes:
+      - ./dex:/var/dex
+    ports:
+      - 5556:5556
+      - 5557:5557
+    command:
+      - dex
+      - serve
+      - /var/dex/etc/dex-container.yaml
+    restart: unless-stopped

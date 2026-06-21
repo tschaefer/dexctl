@@ -1,0 +1,21 @@
+---
+issuer: http://127.0.0.1:5556/dex
+
+storage:
+  type: memory
+
+web:
+  http: 0.0.0.0:5556
+
+grpc:
+  addr: 0.0.0.0:5557
+  reflection: true
+
+logger:
+  level: debug
+  format: json
+
+oauth2:
+  skipApprovalScreen: true
+
+enablePasswordDB: true

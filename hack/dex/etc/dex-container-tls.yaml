@@ -1,0 +1,26 @@
+---
+issuer: https://127.0.0.1:5556/dex
+
+storage:
+  type: memory
+
+web:
+  https: 0.0.0.0:5556
+  tlsCert: /var/dex/etc/tls/server-crt.pem
+  tlsKey: /var/dex/etc/tls/server-key.pem
+
+grpc:
+  addr: 0.0.0.0:5557
+  reflection: true
+  tlsCert: /var/dex/etc/tls/server-crt.pem
+  tlsKey: /var/dex/etc/tls/server-key.pem
+  tlsClientCA: /var/dex/etc/tls/ca-crt.pem
+
+logger:
+  level: debug
+  format: json
+
+oauth2:
+  skipApprovalScreen: true
+
+enablePasswordDB: true

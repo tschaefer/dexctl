@@ -1,0 +1,33 @@
+#!/bin/bash
+
+readonly ME=${0##*/}
+readonly DIR=${0%$ME}
+
+set -o errexit
+set -o nounset
+
+cd "$DIR"
+
+
+# shellcheck disable=SC2034
+SAN="DNS:localhost,IP:127.0.0.1,IP:::1"
+export SAN
+
+mkdir -p ca/{certs,crl,newcerts}
+touch ca/index.txt
+echo 1000 > ca/serial
+
+openssl ecparam -name prime256v1 -genkey -noout -out ca-key.pem
+openssl req -config openssl.conf -new -x509 -days 3650 -sha256 -key ca-key.pem -extensions v3_ca -out ca-crt.pem -subj "/CN=dexctl-ca"
+
+openssl ecparam -name prime256v1 -genkey -noout -out server-key.pem
+openssl req -config openssl.conf -new -sha256 -key server-key.pem -out server-csr.pem -subj "/CN=dexctl-server"
+openssl ca -batch -config openssl.conf -extensions server_cert -days 365 -notext -md sha256 -in server-csr.pem -out server-crt.pem -cert ca-crt.pem -keyfile ca-key.pem
+
+openssl ecparam -name prime256v1 -genkey -noout -out client-key.pem
+openssl req -config openssl.conf -new -sha256 -key client-key.pem -out client-csr.pem -subj "/CN=dexctl-client"
+openssl ca -batch -config openssl.conf -extensions usr_cert -days 365 -notext -md sha256 -in client-csr.pem -out client-crt.pem -cert ca-crt.pem -keyfile ca-key.pem
+
+rm -f *.csr
+
+cd -

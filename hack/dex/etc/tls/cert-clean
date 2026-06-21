@@ -1,0 +1,13 @@
+#!/bin/bash
+
+readonly ME=${0##*/}
+readonly DIR=${0%$ME}
+
+set -o errexit
+set -o nounset
+
+cd "$DIR"
+
+rm -fr ca *.pem
+
+cd -
