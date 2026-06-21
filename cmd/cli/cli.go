@@ -10,7 +10,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/tschaefer/dexctl/internal/dex"
+	"github.com/tschaefer/dexctl/pkg/dex"
 )
 
 type config struct {

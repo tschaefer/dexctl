@@ -15,11 +15,11 @@ build:
 
 .PHONY: test
 test:
-	go test -count=1 -v ./internal/...
+	go test -count=1 -v ./pkg/...
 
 .PHONY: test-coverage
 test-coverage:
-	go test -count=1 -v -coverprofile=coverage.out ./internal/...
+	go test -count=1 -v -coverprofile=coverage.out ./pkg/...
 
 .PHONY: clean
 clean:
