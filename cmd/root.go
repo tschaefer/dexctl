@@ -20,17 +20,10 @@ import (
 )
 
 var rootCmd = &cobra.Command{
-	Use:   "dexctl",
-	Short: "Command line tool for managing a dex server",
-	Long:  `Command line tool for managing a dex server`,
-	Run: func(cmd *cobra.Command, args []string) {
-		v, _ := cmd.Flags().GetBool("version")
-		if v {
-			fmt.Println("dexctl version 0.0.1")
-			return
-		}
-		_ = cmd.Help()
-	},
+	Use:              "dexctl",
+	Short:            "Command line tool for managing a dex server",
+	Long:             `Command line tool for managing a dex server`,
+	Run:              runRootCmd,
 	PersistentPreRun: handlePersistentFlags,
 }
 
@@ -85,4 +78,13 @@ func handlePersistentFlags(cmd *cobra.Command, args []string) {
 			}
 		}
 	}
+}
+
+func runRootCmd(cmd *cobra.Command, args []string) {
+	version, _ := cmd.Flags().GetBool("version")
+	if version {
+		fmt.Println("dexctl version 0.0.1")
+		return
+	}
+	_ = cmd.Help()
 }
