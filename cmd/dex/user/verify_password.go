@@ -16,14 +16,21 @@ import (
 var verifyPasswordCmd = &cobra.Command{
 	Use:               "verify-password",
 	Short:             "Verify Dex user password",
-	Args:              cobra.ExactArgs(2),
 	ValidArgsFunction: completion.CompleteArgs,
 	Run:               runVerifyPasswordCmd,
 }
 
+func init() {
+	verifyPasswordCmd.Flags().String("user.email", "", "Email")
+	verifyPasswordCmd.Flags().String("user.password", "", "Password")
+
+	_ = deleteCmd.MarkFlagRequired("user.email")
+	_ = deleteCmd.MarkFlagRequired("user.password")
+}
+
 func runVerifyPasswordCmd(cmd *cobra.Command, args []string) {
-	email := args[0]
-	password := args[1]
+	email, _ := cmd.Flags().GetString("user.email")
+	password, _ := cmd.Flags().GetString("user.password")
 
 	dexctl, err := cli.New(cmd)
 	cobra.CheckErr(err)

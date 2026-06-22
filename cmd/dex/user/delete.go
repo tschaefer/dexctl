@@ -14,13 +14,18 @@ import (
 var deleteCmd = &cobra.Command{
 	Use:               "delete",
 	Short:             "Delete Dex user",
-	Args:              cobra.ExactArgs(1),
 	ValidArgsFunction: completion.CompleteArgs,
 	Run:               runDeleteCmd,
 }
 
+func init() {
+	deleteCmd.Flags().String("user.email", "", "Email")
+
+	_ = deleteCmd.MarkFlagRequired("user.email")
+}
+
 func runDeleteCmd(cmd *cobra.Command, args []string) {
-	email := args[0]
+	email, _ := cmd.Flags().GetString("user.email")
 
 	dexctl, err := cli.New(cmd)
 	cobra.CheckErr(err)
