@@ -7,7 +7,6 @@ package version
 import (
 	"encoding/json"
 	"fmt"
-	"os"
 
 	"github.com/spf13/cobra"
 
@@ -24,22 +23,13 @@ var Cmd = &cobra.Command{
 
 func runVersionCmd(cmd *cobra.Command, args []string) {
 	dexctl, err := cli.New(cmd)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "%v\n", err)
-		os.Exit(1)
-	}
+	cobra.CheckErr(err)
 
 	version, err := dexctl.Version()
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "%v\n", err)
-		os.Exit(1)
-	}
+	cobra.CheckErr(err)
 
 	data, err := json.Marshal(version)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "%v\n", err)
-		os.Exit(1)
-	}
+	cobra.CheckErr(err)
 
 	fmt.Println(string(data))
 }
