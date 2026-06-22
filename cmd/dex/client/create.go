@@ -11,12 +11,14 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/tschaefer/dexctl/cmd/cli"
+	"github.com/tschaefer/dexctl/cmd/completion"
 )
 
 var createCmd = &cobra.Command{
-	Use:   "create",
-	Short: "Create Dex password",
-	Run:   runCreateCmd,
+	Use:               "create",
+	Short:             "Create Dex password",
+	Run:               runCreateCmd,
+	ValidArgsFunction: completion.CompleteArgs,
 }
 
 func init() {

@@ -12,12 +12,14 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/tschaefer/dexctl/cmd/cli"
+	"github.com/tschaefer/dexctl/cmd/completion"
 )
 
 var Cmd = &cobra.Command{
-	Use:   "version",
-	Short: "Dex version",
-	Run:   runVersionCmd,
+	Use:               "version",
+	Short:             "Dex version",
+	Run:               runVersionCmd,
+	ValidArgsFunction: completion.CompleteArgs,
 }
 
 func runVersionCmd(cmd *cobra.Command, args []string) {

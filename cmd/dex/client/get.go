@@ -11,13 +11,15 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/tschaefer/dexctl/cmd/cli"
+	"github.com/tschaefer/dexctl/cmd/completion"
 )
 
 var getCmd = &cobra.Command{
-	Use:   "get",
-	Short: "Get Dex clients",
-	Args:  cobra.ExactArgs(1),
-	Run:   runGetCmd,
+	Use:               "get",
+	Short:             "Get Dex clients",
+	Args:              cobra.ExactArgs(1),
+	ValidArgsFunction: completion.CompleteArgs,
+	Run:               runGetCmd,
 }
 
 func runGetCmd(cmd *cobra.Command, args []string) {

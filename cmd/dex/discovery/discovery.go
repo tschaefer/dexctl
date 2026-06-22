@@ -11,12 +11,14 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/tschaefer/dexctl/cmd/cli"
+	"github.com/tschaefer/dexctl/cmd/completion"
 )
 
 var Cmd = &cobra.Command{
-	Use:   "discovery",
-	Short: "Dex OIDC discovery information",
-	Run:   runDiscoveryCmd,
+	Use:               "discovery",
+	Short:             "Dex OIDC discovery information",
+	Run:               runDiscoveryCmd,
+	ValidArgsFunction: completion.CompleteArgs,
 }
 
 func runDiscoveryCmd(cmd *cobra.Command, args []string) {

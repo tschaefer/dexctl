@@ -10,12 +10,14 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/tschaefer/dexctl/cmd/cli"
+	"github.com/tschaefer/dexctl/cmd/completion"
 )
 
 var updateCmd = &cobra.Command{
-	Use:   "update",
-	Short: "Update Dex user",
-	Run:   runUpdateCmd,
+	Use:               "update",
+	Short:             "Update Dex user",
+	Run:               runUpdateCmd,
+	ValidArgsFunction: completion.CompleteArgs,
 }
 
 func init() {

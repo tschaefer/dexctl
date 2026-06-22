@@ -8,13 +8,15 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/tschaefer/dexctl/cmd/cli"
+	"github.com/tschaefer/dexctl/cmd/completion"
 )
 
 var deleteCmd = &cobra.Command{
-	Use:   "delete",
-	Short: "Delete Dex user",
-	Args:  cobra.ExactArgs(1),
-	Run:   runDeleteCmd,
+	Use:               "delete",
+	Short:             "Delete Dex user",
+	Args:              cobra.ExactArgs(1),
+	ValidArgsFunction: completion.CompleteArgs,
+	Run:               runDeleteCmd,
 }
 
 func runDeleteCmd(cmd *cobra.Command, args []string) {

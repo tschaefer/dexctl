@@ -10,14 +10,15 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/tschaefer/dexctl/cmd/cli"
+	"github.com/tschaefer/dexctl/cmd/completion"
 )
 
 var verifyPasswordCmd = &cobra.Command{
-	Use:   "verify-password",
-	Short: "Verify Dex user password",
-	Args:  cobra.ExactArgs(2),
-	Run:   runVerifyPasswordCmd,
-
+	Use:               "verify-password",
+	Short:             "Verify Dex user password",
+	Args:              cobra.ExactArgs(2),
+	ValidArgsFunction: completion.CompleteArgs,
+	Run:               runVerifyPasswordCmd,
 }
 
 func runVerifyPasswordCmd(cmd *cobra.Command, args []string) {
