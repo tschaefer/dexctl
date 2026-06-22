@@ -19,9 +19,9 @@ var deleteCmd = &cobra.Command{
 }
 
 func init() {
-	getCmd.Flags().String("client.id", "", "Client ID")
+	deleteCmd.Flags().String("client.id", "", "Client ID")
 
-	_ = getCmd.MarkFlagRequired("client.id")
+	_ = deleteCmd.MarkFlagRequired("client.id")
 }
 
 func runDeleteCmd(cmd *cobra.Command, args []string) {
