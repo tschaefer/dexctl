@@ -19,9 +19,9 @@ func Test_UserCreateSucceeds(t *testing.T) {
 	}
 
 	err = dex.UserCreate(&User{
-		Email: gofakeit.Email(),
+		Email:    gofakeit.Email(),
 		Username: gofakeit.Username(),
-		UserId: gofakeit.UUID(),
+		UserId:   gofakeit.UUID(),
 		Password: gofakeit.Password(true, false, false, false, false, 32),
 	})
 	assert.NoError(t, err, "create user")
@@ -34,7 +34,7 @@ func Test_UserCreateReturnsErrorIfConnectionFails(t *testing.T) {
 	}
 
 	err = dex.UserCreate(&User{
-		Email: gofakeit.Email(),
+		Email:  gofakeit.Email(),
 		UserId: gofakeit.UUID(),
 	})
 	assert.Error(t, err, "create user")
@@ -52,9 +52,9 @@ func Test_UserCreateReturnsErrorIfUserAlreadyExists(t *testing.T) {
 	password := gofakeit.Password(true, false, false, false, false, 32)
 
 	err = dex.UserCreate(&User{
-		Email: email,
+		Email:    email,
 		Username: username,
-		UserId: userId,
+		UserId:   userId,
 		Password: password,
 	})
 	if err != nil {
@@ -62,9 +62,9 @@ func Test_UserCreateReturnsErrorIfUserAlreadyExists(t *testing.T) {
 	}
 
 	err = dex.UserCreate(&User{
-		Email: email,
+		Email:    email,
 		Username: username,
-		UserId: userId,
+		UserId:   userId,
 		Password: password,
 	})
 	assert.Error(t, err, "create user")
@@ -80,7 +80,7 @@ func Test_UserDeleteSucceeds(t *testing.T) {
 	email := gofakeit.Email()
 
 	err = dex.UserCreate(&User{
-		Email: email,
+		Email:  email,
 		UserId: gofakeit.UUID(),
 	})
 	if err != nil {
@@ -111,7 +111,7 @@ func Test_UserDeleteReturnsErrorIfUserDoesNotExist(t *testing.T) {
 
 	err = dex.UserDelete(email)
 	assert.Error(t, err, "delete user")
-	assert.Equal(t, err.Error(), "user " + email + " not found", "user not found")
+	assert.Equal(t, err.Error(), "user "+email+" not found", "user not found")
 }
 
 func Test_UserListReturnsUsers(t *testing.T) {
@@ -123,7 +123,7 @@ func Test_UserListReturnsUsers(t *testing.T) {
 	userCount := 10
 	for range userCount {
 		err = dex.UserCreate(&User{
-			Email: gofakeit.Email(),
+			Email:  gofakeit.Email(),
 			UserId: gofakeit.UUID(),
 		})
 		if err != nil {
@@ -158,8 +158,8 @@ func Test_UserUpdateSucceeds(t *testing.T) {
 	userId := gofakeit.UUID()
 
 	err = dex.UserCreate(&User{
-		Email: email,
-		UserId: userId,
+		Email:    email,
+		UserId:   userId,
 		Username: username,
 	})
 	if err != nil {
@@ -169,7 +169,7 @@ func Test_UserUpdateSucceeds(t *testing.T) {
 	newUsername := gofakeit.Username()
 
 	err = dex.UserUpdate(&User{
-		Email: email,
+		Email:    email,
 		Username: newUsername,
 	})
 	assert.NoError(t, err, "update user")
@@ -182,7 +182,7 @@ func Test_UserUpdateReturnsErrorIfConnectionFails(t *testing.T) {
 	}
 
 	err = dex.UserUpdate(&User{
-		Email: gofakeit.Email(),
+		Email:  gofakeit.Email(),
 		UserId: gofakeit.UUID(),
 	})
 	assert.Error(t, err, "update user")
@@ -197,11 +197,11 @@ func Test_UserUpdateReturnsErrorIfUserDoesNotExist(t *testing.T) {
 	email := gofakeit.Email()
 
 	err = dex.UserUpdate(&User{
-		Email: email,
+		Email:  email,
 		UserId: gofakeit.UUID(),
 	})
 	assert.Error(t, err, "update user")
-	assert.Equal(t, err.Error(), "user " + email + " not found", "user not found")
+	assert.Equal(t, err.Error(), "user "+email+" not found", "user not found")
 }
 
 func Test_UserVerifyPasswordReturnsFalseIfPasswordIsCorrect(t *testing.T) {
@@ -214,9 +214,9 @@ func Test_UserVerifyPasswordReturnsFalseIfPasswordIsCorrect(t *testing.T) {
 	password := gofakeit.Password(true, false, false, false, false, 32)
 
 	err = dex.UserCreate(&User{
-		Email: email,
+		Email:    email,
 		Username: gofakeit.Username(),
-		UserId: gofakeit.UUID(),
+		UserId:   gofakeit.UUID(),
 		Password: password,
 	})
 	if err != nil {
@@ -260,9 +260,9 @@ func Test_UserVerifyPasswordReturnsFalseIfPasswordIsIncorrect(t *testing.T) {
 	password := gofakeit.Password(true, false, false, false, false, 32)
 
 	err = dex.UserCreate(&User{
-		Email: email,
+		Email:    email,
 		Username: gofakeit.Username(),
-		UserId: gofakeit.UUID(),
+		UserId:   gofakeit.UUID(),
 		Password: password,
 	})
 	if err != nil {
