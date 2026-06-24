@@ -28,7 +28,7 @@ func Test_UserCreateSucceeds(t *testing.T) {
 }
 
 func Test_UserCreateReturnsErrorIfConnectionFails(t *testing.T) {
-	dex, err := New(context.Background(), "localhost:0")
+	dex, err := New(context.Background(), "127.0.0.1:0")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -92,7 +92,7 @@ func Test_UserDeleteSucceeds(t *testing.T) {
 }
 
 func Test_UserDeleteReturnsErrorIfConnectionFails(t *testing.T) {
-	dex, err := New(context.Background(), "localhost:0")
+	dex, err := New(context.Background(), "127.0.0.1:0")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -137,7 +137,7 @@ func Test_UserListReturnsUsers(t *testing.T) {
 }
 
 func Test_UserListReturnsErrorIfConnectionFails(t *testing.T) {
-	dex, err := New(context.Background(), "localhost:0")
+	dex, err := New(context.Background(), "127.0.0.1:0")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -176,7 +176,7 @@ func Test_UserUpdateSucceeds(t *testing.T) {
 }
 
 func Test_UserUpdateReturnsErrorIfConnectionFails(t *testing.T) {
-	dex, err := New(context.Background(), "localhost:0")
+	dex, err := New(context.Background(), "127.0.0.1:0")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -229,7 +229,7 @@ func Test_UserVerifyPasswordReturnsFalseIfPasswordIsCorrect(t *testing.T) {
 }
 
 func Test_UserVerifyPasswordReturnsErrorIfConnectionFails(t *testing.T) {
-	dex, err := New(context.Background(), "localhost:0")
+	dex, err := New(context.Background(), "127.0.0.1:0")
 	if err != nil {
 		t.Fatal(err)
 	}

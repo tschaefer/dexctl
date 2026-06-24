@@ -43,7 +43,7 @@ func Test_ClientCreateReturnsClient(t *testing.T) {
 }
 
 func Test_ClientCreateReturnsErrorIfConnectionFails(t *testing.T) {
-	dex, err := New(context.Background(), "localhost:0")
+	dex, err := New(context.Background(), "127.0.0.1:0")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -109,7 +109,7 @@ func Test_ClientDeleteReturnsClient(t *testing.T) {
 }
 
 func Test_ClientDeleteReturnsErrorIfConnectionFails(t *testing.T) {
-	dex, err := New(context.Background(), "localhost:0")
+	dex, err := New(context.Background(), "127.0.0.1:0")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -157,7 +157,7 @@ func Test_ClientListReturnsClients(t *testing.T) {
 }
 
 func Test_ClientListReturnsErrorIfConnectionFails(t *testing.T) {
-	dex, err := New(context.Background(), "localhost:0")
+	dex, err := New(context.Background(), "127.0.0.1:0")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -206,7 +206,7 @@ func Test_ClientGetReturnsClient(t *testing.T) {
 }
 
 func Test_ClientGetReturnsErrorIfConnectionFails(t *testing.T) {
-	dex, err := New(context.Background(), "localhost:0")
+	dex, err := New(context.Background(), "127.0.0.1:0")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -264,7 +264,7 @@ func Test_ClientUpdateSucceeds(t *testing.T) {
 }
 
 func Test_ClientUpdateReturnsErrorIfConnectionFails(t *testing.T) {
-	dex, err := New(context.Background(), "localhost:0")
+	dex, err := New(context.Background(), "127.0.0.1:0")
 	if err != nil {
 		t.Fatal(err)
 	}

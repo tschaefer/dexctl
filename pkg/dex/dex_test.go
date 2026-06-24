@@ -11,7 +11,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-const testDexGrpcAddr = "localhost:5557"
+const testDexGrpcAddr = "127.0.0.1:5557"
 
 func Test_VersionReturnsVersion(t *testing.T) {
 	dex, err := New(context.Background(), testDexGrpcAddr)
@@ -25,7 +25,7 @@ func Test_VersionReturnsVersion(t *testing.T) {
 }
 
 func Test_VersionReturnsErrorIfConnectionFails(t *testing.T) {
-	dex, err := New(context.Background(), "localhost:0")
+	dex, err := New(context.Background(), "127.0.0.1:0")
 	assert.NoError(t, err, "create dex client")
 	assert.NotNil(t, dex, "dex not nil")
 
@@ -46,7 +46,7 @@ func Test_DiscoveryReturnsDiscovery(t *testing.T) {
 }
 
 func Test_DiscoveryReturnsErrorIfConnectionFails(t *testing.T) {
-	dex, err := New(context.Background(), "localhost:0")
+	dex, err := New(context.Background(), "127.0.0.1:0")
 	assert.NoError(t, err, "create dex client")
 	assert.NotNil(t, dex, "dex not nil")
 
