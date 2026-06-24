@@ -25,10 +25,18 @@ test-coverage:
 clean:
 	rm -rf dist/ coverage/ coverage.out
 
-.PHONY: start-dex
-start-dex:
+.PHONY: start-dex-container
+start-dex-container:
 	docker compose --file hack/docker-compose.yml up --detach
 
-.PHONY: stop-dex
-stop-dex:
+.PHONY: stop-dex-container
+stop-dex-container:
 	docker compose --file hack/docker-compose.yml down
+
+.PHONY: start-dex-daemon
+start-dex-daemon:
+	daemonize -c /tmp -p /tmp/dex.pid ${PWD}/hack/dex/bin/dex serve ${PWD}/hack/dex/etc/config.yaml
+
+.PHONY: stop-dex-daemon
+stop-dex-daemon:
+	kill -9 `cat /tmp/dex.pid`

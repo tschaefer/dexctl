@@ -20,7 +20,7 @@ jobs:
       - name: Install dependencies
         run: sudo apt-get update && sudo apt-get install -y daemonize
       - name: Run dex
-        run: daemonize -e /dev/stderr -o /dev/stdout -c . ${PWD}/hack/dex/bin/dex serve hack/dex/etc/config.yaml
+        run: make start-dex-daemon
       - name: Set up Go
         uses: actions/setup-go@v6
         with:
