@@ -5,7 +5,6 @@ Licensed under the Apache-2.0 license, see LICENSE in the project root for detai
 package dex
 
 import (
-	"context"
 	"testing"
 
 	"github.com/brianvoe/gofakeit/v7"
@@ -13,10 +12,7 @@ import (
 )
 
 func Test_ClientCreateReturnsClient(t *testing.T) {
-	dex, err := New(context.Background(), testDexGrpcAddr)
-	if err != nil {
-		t.Fatal(err)
-	}
+	dex := connectDex(t, testGrpcAddr)
 
 	id := gofakeit.ID()
 	secret := gofakeit.UUID()
@@ -43,10 +39,7 @@ func Test_ClientCreateReturnsClient(t *testing.T) {
 }
 
 func Test_ClientCreateReturnsErrorIfConnectionFails(t *testing.T) {
-	dex, err := New(context.Background(), "127.0.0.1:0")
-	if err != nil {
-		t.Fatal(err)
-	}
+	dex := connectDex(t, testNoAddr)
 
 	client, err := dex.ClientCreate(&Client{
 		Id: gofakeit.ID(),
@@ -56,10 +49,7 @@ func Test_ClientCreateReturnsErrorIfConnectionFails(t *testing.T) {
 }
 
 func Test_ClientCreateReturnsErrorIfClientAlreadyExists(t *testing.T) {
-	dex, err := New(context.Background(), testDexGrpcAddr)
-	if err != nil {
-		t.Fatal(err)
-	}
+	dex := connectDex(t, testGrpcAddr)
 
 	id := gofakeit.ID()
 	secret := gofakeit.UUID()
@@ -69,7 +59,7 @@ func Test_ClientCreateReturnsErrorIfClientAlreadyExists(t *testing.T) {
 		gofakeit.URL(),
 	}
 
-	_, err = dex.ClientCreate(&Client{
+	_, err := dex.ClientCreate(&Client{
 		Id:           id,
 		Secret:       secret,
 		Name:         name,
@@ -90,14 +80,11 @@ func Test_ClientCreateReturnsErrorIfClientAlreadyExists(t *testing.T) {
 }
 
 func Test_ClientDeleteReturnsClient(t *testing.T) {
-	dex, err := New(context.Background(), testDexGrpcAddr)
-	if err != nil {
-		t.Fatal(err)
-	}
+	dex := connectDex(t, testGrpcAddr)
 
 	id := gofakeit.ID()
 
-	_, err = dex.ClientCreate(&Client{
+	_, err := dex.ClientCreate(&Client{
 		Id: id,
 	})
 	if err != nil {
@@ -109,37 +96,28 @@ func Test_ClientDeleteReturnsClient(t *testing.T) {
 }
 
 func Test_ClientDeleteReturnsErrorIfConnectionFails(t *testing.T) {
-	dex, err := New(context.Background(), "127.0.0.1:0")
-	if err != nil {
-		t.Fatal(err)
-	}
+	dex := connectDex(t, testNoAddr)
 
-	err = dex.ClientDelete(gofakeit.ID())
+	err := dex.ClientDelete(gofakeit.ID())
 	assert.Error(t, err, "delete client")
 }
 
 func Test_ClientDeleteReturnsErrorIfClientDoesNotExist(t *testing.T) {
-	dex, err := New(context.Background(), testDexGrpcAddr)
-	if err != nil {
-		t.Fatal(err)
-	}
+	dex := connectDex(t, testGrpcAddr)
 
 	id := gofakeit.ID()
 
-	err = dex.ClientDelete(id)
+	err := dex.ClientDelete(id)
 	assert.Error(t, err, "delete client")
 	assert.Equal(t, err.Error(), "client "+id+" not found", "client not found")
 }
 
 func Test_ClientListReturnsClients(t *testing.T) {
-	dex, err := New(context.Background(), testDexGrpcAddr)
-	if err != nil {
-		t.Fatal(err)
-	}
+	dex := connectDex(t, testGrpcAddr)
 
 	clientCount := 10
 	for range clientCount {
-		_, err = dex.ClientCreate(&Client{
+		_, err := dex.ClientCreate(&Client{
 			Id: gofakeit.ID(),
 		})
 		if err != nil {
@@ -157,10 +135,7 @@ func Test_ClientListReturnsClients(t *testing.T) {
 }
 
 func Test_ClientListReturnsErrorIfConnectionFails(t *testing.T) {
-	dex, err := New(context.Background(), "127.0.0.1:0")
-	if err != nil {
-		t.Fatal(err)
-	}
+	dex := connectDex(t, testNoAddr)
 
 	clients, err := dex.ClientList()
 	assert.Error(t, err, "list clients")
@@ -168,10 +143,7 @@ func Test_ClientListReturnsErrorIfConnectionFails(t *testing.T) {
 }
 
 func Test_ClientGetReturnsClient(t *testing.T) {
-	dex, err := New(context.Background(), testDexGrpcAddr)
-	if err != nil {
-		t.Fatal(err)
-	}
+	dex := connectDex(t, testGrpcAddr)
 
 	id := gofakeit.ID()
 	secret := gofakeit.UUID()
@@ -181,7 +153,7 @@ func Test_ClientGetReturnsClient(t *testing.T) {
 		gofakeit.URL(),
 	}
 
-	_, err = dex.ClientCreate(&Client{
+	_, err := dex.ClientCreate(&Client{
 		Id:           id,
 		Secret:       secret,
 		Name:         name,
@@ -206,10 +178,7 @@ func Test_ClientGetReturnsClient(t *testing.T) {
 }
 
 func Test_ClientGetReturnsErrorIfConnectionFails(t *testing.T) {
-	dex, err := New(context.Background(), "127.0.0.1:0")
-	if err != nil {
-		t.Fatal(err)
-	}
+	dex := connectDex(t, testNoAddr)
 
 	client, err := dex.ClientGet(gofakeit.ID())
 	assert.Error(t, err, "get client")
@@ -217,10 +186,7 @@ func Test_ClientGetReturnsErrorIfConnectionFails(t *testing.T) {
 }
 
 func Test_ClientGetReturnsErrorIfClientDoesNotExist(t *testing.T) {
-	dex, err := New(context.Background(), testDexGrpcAddr)
-	if err != nil {
-		t.Fatal(err)
-	}
+	dex := connectDex(t, testGrpcAddr)
 
 	id := gofakeit.ID()
 
@@ -231,15 +197,12 @@ func Test_ClientGetReturnsErrorIfClientDoesNotExist(t *testing.T) {
 }
 
 func Test_ClientUpdateSucceeds(t *testing.T) {
-	dex, err := New(context.Background(), testDexGrpcAddr)
-	if err != nil {
-		t.Fatal(err)
-	}
+	dex := connectDex(t, testGrpcAddr)
 
 	id := gofakeit.ID()
 	name := gofakeit.AppName()
 
-	_, err = dex.ClientCreate(&Client{
+	_, err := dex.ClientCreate(&Client{
 		Id:   id,
 		Name: name,
 	})
@@ -264,12 +227,9 @@ func Test_ClientUpdateSucceeds(t *testing.T) {
 }
 
 func Test_ClientUpdateReturnsErrorIfConnectionFails(t *testing.T) {
-	dex, err := New(context.Background(), "127.0.0.1:0")
-	if err != nil {
-		t.Fatal(err)
-	}
+	dex := connectDex(t, testNoAddr)
 
-	err = dex.ClientUpdate(&Client{
+	err := dex.ClientUpdate(&Client{
 		Id:   gofakeit.ID(),
 		Name: gofakeit.AppName(),
 	})
@@ -277,14 +237,11 @@ func Test_ClientUpdateReturnsErrorIfConnectionFails(t *testing.T) {
 }
 
 func Test_ClientUpdateReturnsErrorIfClientDoesNotExist(t *testing.T) {
-	dex, err := New(context.Background(), testDexGrpcAddr)
-	if err != nil {
-		t.Fatal(err)
-	}
+	dex := connectDex(t, testGrpcAddr)
 
 	id := gofakeit.ID()
 
-	err = dex.ClientUpdate(&Client{
+	err := dex.ClientUpdate(&Client{
 		Id:   id,
 		Name: gofakeit.AppName(),
 	})

@@ -44,3 +44,10 @@ start-dex-daemon:
 stop-dex-daemon:
 	kill `cat /tmp/dex.pid`
 
+.PHONY: gen-tls-assets
+gen-tls-assets:
+	hack/dex/etc/tls/cert-gen
+
+.PHONY: clean-tls-assets
+clean-tls-assets:
+	hack/dex/etc/tls/cert-clean

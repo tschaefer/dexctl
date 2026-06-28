@@ -5,7 +5,6 @@ Licensed under the Apache-2.0 license, see LICENSE in the project root for detai
 package dex
 
 import (
-	"context"
 	"testing"
 
 	"github.com/brianvoe/gofakeit/v7"
@@ -13,12 +12,9 @@ import (
 )
 
 func Test_UserCreateSucceeds(t *testing.T) {
-	dex, err := New(context.Background(), testDexGrpcAddr)
-	if err != nil {
-		t.Fatal(err)
-	}
+	dex := connectDex(t, testGrpcAddr)
 
-	err = dex.UserCreate(&User{
+	err := dex.UserCreate(&User{
 		Email:    gofakeit.Email(),
 		Username: gofakeit.Username(),
 		UserId:   gofakeit.UUID(),
@@ -28,12 +24,9 @@ func Test_UserCreateSucceeds(t *testing.T) {
 }
 
 func Test_UserCreateReturnsErrorIfConnectionFails(t *testing.T) {
-	dex, err := New(context.Background(), "127.0.0.1:0")
-	if err != nil {
-		t.Fatal(err)
-	}
+	dex := connectDex(t, testNoAddr)
 
-	err = dex.UserCreate(&User{
+	err := dex.UserCreate(&User{
 		Email:  gofakeit.Email(),
 		UserId: gofakeit.UUID(),
 	})
@@ -41,17 +34,14 @@ func Test_UserCreateReturnsErrorIfConnectionFails(t *testing.T) {
 }
 
 func Test_UserCreateReturnsErrorIfUserAlreadyExists(t *testing.T) {
-	dex, err := New(context.Background(), testDexGrpcAddr)
-	if err != nil {
-		t.Fatal(err)
-	}
+	dex := connectDex(t, testGrpcAddr)
 
 	email := gofakeit.Email()
 	username := gofakeit.Username()
 	userId := gofakeit.UUID()
 	password := gofakeit.Password(true, false, false, false, false, 32)
 
-	err = dex.UserCreate(&User{
+	err := dex.UserCreate(&User{
 		Email:    email,
 		Username: username,
 		UserId:   userId,
@@ -72,14 +62,11 @@ func Test_UserCreateReturnsErrorIfUserAlreadyExists(t *testing.T) {
 }
 
 func Test_UserDeleteSucceeds(t *testing.T) {
-	dex, err := New(context.Background(), testDexGrpcAddr)
-	if err != nil {
-		t.Fatal(err)
-	}
+	dex := connectDex(t, testGrpcAddr)
 
 	email := gofakeit.Email()
 
-	err = dex.UserCreate(&User{
+	err := dex.UserCreate(&User{
 		Email:  email,
 		UserId: gofakeit.UUID(),
 	})
@@ -92,37 +79,28 @@ func Test_UserDeleteSucceeds(t *testing.T) {
 }
 
 func Test_UserDeleteReturnsErrorIfConnectionFails(t *testing.T) {
-	dex, err := New(context.Background(), "127.0.0.1:0")
-	if err != nil {
-		t.Fatal(err)
-	}
+	dex := connectDex(t, testNoAddr)
 
-	err = dex.UserDelete(gofakeit.Email())
+	err := dex.UserDelete(gofakeit.Email())
 	assert.Error(t, err, "delete user")
 }
 
 func Test_UserDeleteReturnsErrorIfUserDoesNotExist(t *testing.T) {
-	dex, err := New(context.Background(), testDexGrpcAddr)
-	if err != nil {
-		t.Fatal(err)
-	}
+	dex := connectDex(t, testGrpcAddr)
 
 	email := gofakeit.Email()
 
-	err = dex.UserDelete(email)
+	err := dex.UserDelete(email)
 	assert.Error(t, err, "delete user")
 	assert.Equal(t, err.Error(), "user "+email+" not found", "user not found")
 }
 
 func Test_UserListReturnsUsers(t *testing.T) {
-	dex, err := New(context.Background(), testDexGrpcAddr)
-	if err != nil {
-		t.Fatal(err)
-	}
+	dex := connectDex(t, testGrpcAddr)
 
 	userCount := 10
 	for range userCount {
-		err = dex.UserCreate(&User{
+		err := dex.UserCreate(&User{
 			Email:  gofakeit.Email(),
 			UserId: gofakeit.UUID(),
 		})
@@ -137,10 +115,7 @@ func Test_UserListReturnsUsers(t *testing.T) {
 }
 
 func Test_UserListReturnsErrorIfConnectionFails(t *testing.T) {
-	dex, err := New(context.Background(), "127.0.0.1:0")
-	if err != nil {
-		t.Fatal(err)
-	}
+	dex := connectDex(t, testNoAddr)
 
 	users, err := dex.UserList()
 	assert.Error(t, err, "list users")
@@ -148,16 +123,13 @@ func Test_UserListReturnsErrorIfConnectionFails(t *testing.T) {
 }
 
 func Test_UserUpdateSucceeds(t *testing.T) {
-	dex, err := New(context.Background(), testDexGrpcAddr)
-	if err != nil {
-		t.Fatal(err)
-	}
+	dex := connectDex(t, testGrpcAddr)
 
 	email := gofakeit.Email()
 	username := gofakeit.Username()
 	userId := gofakeit.UUID()
 
-	err = dex.UserCreate(&User{
+	err := dex.UserCreate(&User{
 		Email:    email,
 		UserId:   userId,
 		Username: username,
@@ -176,12 +148,9 @@ func Test_UserUpdateSucceeds(t *testing.T) {
 }
 
 func Test_UserUpdateReturnsErrorIfConnectionFails(t *testing.T) {
-	dex, err := New(context.Background(), "127.0.0.1:0")
-	if err != nil {
-		t.Fatal(err)
-	}
+	dex := connectDex(t, testNoAddr)
 
-	err = dex.UserUpdate(&User{
+	err := dex.UserUpdate(&User{
 		Email:  gofakeit.Email(),
 		UserId: gofakeit.UUID(),
 	})
@@ -189,14 +158,11 @@ func Test_UserUpdateReturnsErrorIfConnectionFails(t *testing.T) {
 }
 
 func Test_UserUpdateReturnsErrorIfUserDoesNotExist(t *testing.T) {
-	dex, err := New(context.Background(), testDexGrpcAddr)
-	if err != nil {
-		t.Fatal(err)
-	}
+	dex := connectDex(t, testGrpcAddr)
 
 	email := gofakeit.Email()
 
-	err = dex.UserUpdate(&User{
+	err := dex.UserUpdate(&User{
 		Email:  email,
 		UserId: gofakeit.UUID(),
 	})
@@ -205,15 +171,12 @@ func Test_UserUpdateReturnsErrorIfUserDoesNotExist(t *testing.T) {
 }
 
 func Test_UserVerifyPasswordReturnsFalseIfPasswordIsCorrect(t *testing.T) {
-	dex, err := New(context.Background(), testDexGrpcAddr)
-	if err != nil {
-		t.Fatal(err)
-	}
+	dex := connectDex(t, testGrpcAddr)
 
 	email := gofakeit.Email()
 	password := gofakeit.Password(true, false, false, false, false, 32)
 
-	err = dex.UserCreate(&User{
+	err := dex.UserCreate(&User{
 		Email:    email,
 		Username: gofakeit.Username(),
 		UserId:   gofakeit.UUID(),
@@ -229,10 +192,7 @@ func Test_UserVerifyPasswordReturnsFalseIfPasswordIsCorrect(t *testing.T) {
 }
 
 func Test_UserVerifyPasswordReturnsErrorIfConnectionFails(t *testing.T) {
-	dex, err := New(context.Background(), "127.0.0.1:0")
-	if err != nil {
-		t.Fatal(err)
-	}
+	dex := connectDex(t, testNoAddr)
 
 	verified, err := dex.UserVerifyPassword(gofakeit.Email(), gofakeit.Password(true, false, false, false, false, 32))
 	assert.False(t, verified, "verify password")
@@ -240,10 +200,7 @@ func Test_UserVerifyPasswordReturnsErrorIfConnectionFails(t *testing.T) {
 }
 
 func Test_UserVerifyPasswordReturnsErrorIfUserDoesNotExist(t *testing.T) {
-	dex, err := New(context.Background(), testDexGrpcAddr)
-	if err != nil {
-		t.Fatal(err)
-	}
+	dex := connectDex(t, testGrpcAddr)
 
 	verified, err := dex.UserVerifyPassword(gofakeit.Email(), gofakeit.Password(true, false, false, false, false, 32))
 	assert.False(t, verified, "verify password")
@@ -251,15 +208,12 @@ func Test_UserVerifyPasswordReturnsErrorIfUserDoesNotExist(t *testing.T) {
 }
 
 func Test_UserVerifyPasswordReturnsFalseIfPasswordIsIncorrect(t *testing.T) {
-	dex, err := New(context.Background(), testDexGrpcAddr)
-	if err != nil {
-		t.Fatal(err)
-	}
+	dex := connectDex(t, testGrpcAddr)
 
 	email := gofakeit.Email()
 	password := gofakeit.Password(true, false, false, false, false, 32)
 
-	err = dex.UserCreate(&User{
+	err := dex.UserCreate(&User{
 		Email:    email,
 		Username: gofakeit.Username(),
 		UserId:   gofakeit.UUID(),

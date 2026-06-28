@@ -6,16 +6,41 @@ package dex
 
 import (
 	"context"
+	"os"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
-const testDexGrpcAddr = "127.0.0.1:5557"
+const testClientCertPath = "../../hack/dex/etc/tls/client-crt.pem"
+const testClientKeyPath = "../../hack/dex/etc/tls/client-key.pem"
+const testCaPath = "../../hack/dex/etc/tls/ca-crt.pem"
+
+const testGrpcAddr = "127.0.0.1:5557"
+const testNoAddr = "127.0.0.1:0"
+
+func connectDex(t *testing.T, grpcAddr string) *Dex {
+	_, tls := os.LookupEnv("DEX_TLS")
+
+	if tls {
+		dex, err := NewWithTLS(context.Background(), grpcAddr, testClientCertPath, testClientKeyPath, testCaPath)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		return dex
+	}
+
+	dex, err := New(context.Background(), grpcAddr)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	return dex
+}
 
 func Test_VersionReturnsVersion(t *testing.T) {
-	dex, err := New(context.Background(), testDexGrpcAddr)
-	assert.NoError(t, err, "create dex client")
+	dex := connectDex(t, testGrpcAddr)
 
 	version, err := dex.Version()
 	assert.NoError(t, err, "get version")
@@ -25,9 +50,7 @@ func Test_VersionReturnsVersion(t *testing.T) {
 }
 
 func Test_VersionReturnsErrorIfConnectionFails(t *testing.T) {
-	dex, err := New(context.Background(), "127.0.0.1:0")
-	assert.NoError(t, err, "create dex client")
-	assert.NotNil(t, dex, "dex not nil")
+	dex := connectDex(t, testNoAddr)
 
 	version, err := dex.Version()
 	assert.Error(t, err, "get version")
@@ -35,8 +58,7 @@ func Test_VersionReturnsErrorIfConnectionFails(t *testing.T) {
 }
 
 func Test_DiscoveryReturnsDiscovery(t *testing.T) {
-	dex, err := New(context.Background(), testDexGrpcAddr)
-	assert.NoError(t, err, "create dex client")
+	dex := connectDex(t, testGrpcAddr)
 
 	discovery, err := dex.Discovery()
 	assert.NoError(t, err, "get discovery")
@@ -46,9 +68,7 @@ func Test_DiscoveryReturnsDiscovery(t *testing.T) {
 }
 
 func Test_DiscoveryReturnsErrorIfConnectionFails(t *testing.T) {
-	dex, err := New(context.Background(), "127.0.0.1:0")
-	assert.NoError(t, err, "create dex client")
-	assert.NotNil(t, dex, "dex not nil")
+	dex := connectDex(t, testNoAddr)
 
 	discovery, err := dex.Discovery()
 	assert.Error(t, err, "get discovery")
