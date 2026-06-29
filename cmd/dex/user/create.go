@@ -26,7 +26,7 @@ func init() {
 	createCmd.Flags().StringVar(&user.Username, "user.username", "", "Username")
 	createCmd.Flags().StringVar(&user.UserId, "user.user-id", "", "User ID")
 
-	createCmd.Flags().String("user.config", "", "User config file")
+	createCmd.Flags().String("user.config", "", "User config file (YAML or JSON)")
 }
 
 func runCreateCmd(cmd *cobra.Command, args []string) {

@@ -30,7 +30,7 @@ func init() {
 	createCmd.Flags().StringVar(&client.Name, "client.name", "", "Name")
 	createCmd.Flags().StringVar(&client.LogoUrl, "client.logo-url", "", "Logo URL")
 
-	createCmd.Flags().String("client.config", "", "Client config file")
+	createCmd.Flags().String("client.config", "", "Client config file (YAML or JSON)")
 }
 
 func runCreateCmd(cmd *cobra.Command, args []string) {

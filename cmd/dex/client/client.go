@@ -6,9 +6,11 @@ package client
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"os"
 
+	"github.com/goccy/go-yaml"
 	"github.com/spf13/cobra"
 
 	"github.com/tschaefer/dexctl/pkg/dex"
@@ -40,9 +42,10 @@ func parseClientConfig(cmd *cobra.Command) error {
 		return fmt.Errorf("error reading client config file: %w", err)
 	}
 
-	err = json.Unmarshal(data, &client)
-	if err != nil {
-		return fmt.Errorf("error parsing client config file: %w", err)
+	if jsonerr := json.Unmarshal(data, &client); jsonerr != nil {
+		if yamlerr := yaml.Unmarshal(data, &client); yamlerr != nil {
+			return fmt.Errorf("error parsing client config file: %w", errors.Join(jsonerr, yamlerr))
+		}
 	}
 
 	return nil

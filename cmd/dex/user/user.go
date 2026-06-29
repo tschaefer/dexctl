@@ -6,9 +6,11 @@ package user
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"os"
 
+	"github.com/goccy/go-yaml"
 	"github.com/spf13/cobra"
 
 	"github.com/tschaefer/dexctl/pkg/dex"
@@ -40,9 +42,10 @@ func parseUserConfig(cmd *cobra.Command) error {
 		return fmt.Errorf("error reading user config file: %w", err)
 	}
 
-	err = json.Unmarshal(data, &user)
-	if err != nil {
-		return fmt.Errorf("error parsing user config file: %w", err)
+	if jsonerr := json.Unmarshal(data, &user); jsonerr != nil {
+		if yamlerr := yaml.Unmarshal(data, &user); yamlerr != nil {
+			return fmt.Errorf("error parsing user config file: %w", errors.Join(jsonerr, yamlerr))
+		}
 	}
 
 	return nil

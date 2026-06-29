@@ -25,7 +25,7 @@ func init() {
 	updateCmd.Flags().StringVar(&user.Password, "user.password", "", "Password")
 	updateCmd.Flags().StringVar(&user.Username, "user.username", "", "Username")
 
-	updateCmd.Flags().String("user.config", "", "User config file")
+	updateCmd.Flags().String("user.config", "", "User config file (YAML or JSON)")
 }
 
 func runUpdateCmd(cmd *cobra.Command, args []string) {

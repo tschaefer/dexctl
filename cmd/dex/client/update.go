@@ -25,7 +25,7 @@ func init() {
 	updateCmd.Flags().StringVar(&client.Name, "client.name", "", "Name")
 	updateCmd.Flags().StringVar(&client.LogoUrl, "client.logo-url", "", "Logo URL")
 
-	updateCmd.Flags().String("client.config", "", "Client config file")
+	updateCmd.Flags().String("client.config", "", "Client config file (YAML or JSON)")
 }
 
 func runUpdateCmd(cmd *cobra.Command, args []string) {
