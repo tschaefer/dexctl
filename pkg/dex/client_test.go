@@ -11,8 +11,8 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func Test_ClientCreateReturnsClient(t *testing.T) {
-	dex := connectDex(t, testGrpcAddr)
+func clientCreateReturnsClient(t *testing.T) {
+	dex := __connectDex(t, testGrpcAddr)
 
 	id := gofakeit.ID()
 	secret := gofakeit.UUID()
@@ -28,28 +28,28 @@ func Test_ClientCreateReturnsClient(t *testing.T) {
 		Name:         name,
 		RedirectUris: redirectUris,
 	})
-	assert.NoError(t, err, "create client")
-	assert.NotNil(t, client, "client not nil")
+	assert.NoError(t, err)
+	assert.NotNil(t, client)
 
-	assert.IsType(t, &Client{}, client, "client is type Client")
-	assert.Equal(t, id, client.Id, "client id")
-	assert.Equal(t, secret, client.Secret, "client secret")
-	assert.Equal(t, name, client.Name, "client name")
-	assert.Equal(t, redirectUris, client.RedirectUris, "client redirect uris")
+	assert.IsType(t, &Client{}, client)
+	assert.Equal(t, id, client.Id)
+	assert.Equal(t, secret, client.Secret)
+	assert.Equal(t, name, client.Name)
+	assert.Equal(t, redirectUris, client.RedirectUris)
 }
 
-func Test_ClientCreateReturnsErrorIfConnectionFails(t *testing.T) {
-	dex := connectDex(t, testNoAddr)
+func clientCreateReturnsErrorIfConnectionFails(t *testing.T) {
+	dex := __connectDex(t, testNoAddr)
 
 	client, err := dex.ClientCreate(&Client{
 		Id: gofakeit.ID(),
 	})
-	assert.Error(t, err, "create client")
-	assert.Nil(t, client, "client nil")
+	assert.Error(t, err)
+	assert.Nil(t, client)
 }
 
-func Test_ClientCreateReturnsErrorIfClientAlreadyExists(t *testing.T) {
-	dex := connectDex(t, testGrpcAddr)
+func clientCreateReturnsErrorIfClientAlreadyExists(t *testing.T) {
+	dex := __connectDex(t, testGrpcAddr)
 
 	id := gofakeit.ID()
 	secret := gofakeit.UUID()
@@ -75,12 +75,12 @@ func Test_ClientCreateReturnsErrorIfClientAlreadyExists(t *testing.T) {
 		Name:         name,
 		RedirectUris: redirectUris,
 	})
-	assert.Error(t, err, "create client")
-	assert.Equal(t, err.Error(), "client "+id+" already exists", "client already exists")
+	assert.Error(t, err)
+	assert.Equal(t, err.Error(), "client "+id+" already exists")
 }
 
-func Test_ClientDeleteReturnsClient(t *testing.T) {
-	dex := connectDex(t, testGrpcAddr)
+func clientDeleteReturnsClient(t *testing.T) {
+	dex := __connectDex(t, testGrpcAddr)
 
 	id := gofakeit.ID()
 
@@ -92,28 +92,28 @@ func Test_ClientDeleteReturnsClient(t *testing.T) {
 	}
 
 	err = dex.ClientDelete(id)
-	assert.NoError(t, err, "delete client")
+	assert.NoError(t, err)
 }
 
-func Test_ClientDeleteReturnsErrorIfConnectionFails(t *testing.T) {
-	dex := connectDex(t, testNoAddr)
+func clientDeleteReturnsErrorIfConnectionFails(t *testing.T) {
+	dex := __connectDex(t, testNoAddr)
 
 	err := dex.ClientDelete(gofakeit.ID())
-	assert.Error(t, err, "delete client")
+	assert.Error(t, err)
 }
 
-func Test_ClientDeleteReturnsErrorIfClientDoesNotExist(t *testing.T) {
-	dex := connectDex(t, testGrpcAddr)
+func clientDeleteReturnsErrorIfClientDoesNotExist(t *testing.T) {
+	dex := __connectDex(t, testGrpcAddr)
 
 	id := gofakeit.ID()
 
 	err := dex.ClientDelete(id)
-	assert.Error(t, err, "delete client")
-	assert.Equal(t, err.Error(), "client "+id+" not found", "client not found")
+	assert.Error(t, err)
+	assert.Equal(t, err.Error(), "client "+id+" not found")
 }
 
-func Test_ClientListReturnsClients(t *testing.T) {
-	dex := connectDex(t, testGrpcAddr)
+func clientListReturnsClients(t *testing.T) {
+	dex := __connectDex(t, testGrpcAddr)
 
 	clientCount := 10
 	for range clientCount {
@@ -126,24 +126,24 @@ func Test_ClientListReturnsClients(t *testing.T) {
 	}
 
 	clients, err := dex.ClientList()
-	assert.NoError(t, err, "list clients")
-	assert.NotNil(t, clients, "clients not nil")
+	assert.NoError(t, err)
+	assert.NotNil(t, clients)
 
-	assert.IsType(t, &[]Client{}, clients, "clients is type []Client")
-	assert.NotEmpty(t, *clients, "clients not empty")
-	assert.GreaterOrEqual(t, len(*clients), clientCount, "clients count not null")
+	assert.IsType(t, &[]Client{}, clients)
+	assert.NotEmpty(t, *clients)
+	assert.GreaterOrEqual(t, len(*clients), clientCount)
 }
 
-func Test_ClientListReturnsErrorIfConnectionFails(t *testing.T) {
-	dex := connectDex(t, testNoAddr)
+func clientListReturnsErrorIfConnectionFails(t *testing.T) {
+	dex := __connectDex(t, testNoAddr)
 
 	clients, err := dex.ClientList()
-	assert.Error(t, err, "list clients")
-	assert.Nil(t, clients, "clients nil")
+	assert.Error(t, err)
+	assert.Nil(t, clients)
 }
 
-func Test_ClientGetReturnsClient(t *testing.T) {
-	dex := connectDex(t, testGrpcAddr)
+func clientGetReturnsClient(t *testing.T) {
+	dex := __connectDex(t, testGrpcAddr)
 
 	id := gofakeit.ID()
 	secret := gofakeit.UUID()
@@ -164,40 +164,40 @@ func Test_ClientGetReturnsClient(t *testing.T) {
 	}
 
 	client, err := dex.ClientGet(id)
-	assert.NoError(t, err, "get client")
-	assert.NotNil(t, client, "client not nil")
+	assert.NoError(t, err)
+	assert.NotNil(t, client)
 
-	assert.IsType(t, &Client{}, client, "client is type Client")
-	assert.Equal(t, id, client.Id, "client id")
-	assert.Equal(t, secret, client.Secret, "client secret")
-	assert.Equal(t, name, client.Name, "client name")
-	assert.NotEmpty(t, client.RedirectUris, "client redirect uris not empty")
-	assert.Len(t, client.RedirectUris, 2, "client redirect uris count")
-	assert.Equal(t, client.RedirectUris[0], redirectUris[0], "client redirect uris")
-	assert.Equal(t, client.RedirectUris[1], redirectUris[1], "client redirect uris")
+	assert.IsType(t, &Client{}, client)
+	assert.Equal(t, id, client.Id)
+	assert.Equal(t, secret, client.Secret)
+	assert.Equal(t, name, client.Name)
+	assert.NotEmpty(t, client.RedirectUris)
+	assert.Len(t, client.RedirectUris, 2)
+	assert.Equal(t, client.RedirectUris[0], redirectUris[0])
+	assert.Equal(t, client.RedirectUris[1], redirectUris[1])
 }
 
-func Test_ClientGetReturnsErrorIfConnectionFails(t *testing.T) {
-	dex := connectDex(t, testNoAddr)
+func clientGetReturnsErrorIfConnectionFails(t *testing.T) {
+	dex := __connectDex(t, testNoAddr)
 
 	client, err := dex.ClientGet(gofakeit.ID())
-	assert.Error(t, err, "get client")
-	assert.Nil(t, client, "client nil")
+	assert.Error(t, err)
+	assert.Nil(t, client)
 }
 
-func Test_ClientGetReturnsErrorIfClientDoesNotExist(t *testing.T) {
-	dex := connectDex(t, testGrpcAddr)
+func clientGetReturnsErrorIfClientDoesNotExist(t *testing.T) {
+	dex := __connectDex(t, testGrpcAddr)
 
 	id := gofakeit.ID()
 
 	client, err := dex.ClientGet(id)
-	assert.Error(t, err, "get client")
-	assert.Equal(t, err.Error(), "client "+id+" not found", "client not found")
-	assert.Nil(t, client, "client nil")
+	assert.Error(t, err)
+	assert.Equal(t, err.Error(), "client "+id+" not found")
+	assert.Nil(t, client)
 }
 
-func Test_ClientUpdateSucceeds(t *testing.T) {
-	dex := connectDex(t, testGrpcAddr)
+func clientUpdateSucceeds(t *testing.T) {
+	dex := __connectDex(t, testGrpcAddr)
 
 	id := gofakeit.ID()
 	name := gofakeit.AppName()
@@ -219,25 +219,25 @@ func Test_ClientUpdateSucceeds(t *testing.T) {
 	assert.NoError(t, err)
 
 	client, err := dex.ClientGet(id)
-	assert.NoError(t, err, "get client")
-	assert.NotNil(t, client, "client not nil")
+	assert.NoError(t, err)
+	assert.NotNil(t, client)
 
-	assert.NotEqual(t, name, client.Name, "client name not equal")
-	assert.Equal(t, newName, client.Name, "new client name")
+	assert.NotEqual(t, name, client.Name)
+	assert.Equal(t, newName, client.Name)
 }
 
-func Test_ClientUpdateReturnsErrorIfConnectionFails(t *testing.T) {
-	dex := connectDex(t, testNoAddr)
+func clientUpdateReturnsErrorIfConnectionFails(t *testing.T) {
+	dex := __connectDex(t, testNoAddr)
 
 	err := dex.ClientUpdate(&Client{
 		Id:   gofakeit.ID(),
 		Name: gofakeit.AppName(),
 	})
-	assert.Error(t, err, "update client")
+	assert.Error(t, err)
 }
 
-func Test_ClientUpdateReturnsErrorIfClientDoesNotExist(t *testing.T) {
-	dex := connectDex(t, testGrpcAddr)
+func clientUpdateReturnsErrorIfClientDoesNotExist(t *testing.T) {
+	dex := __connectDex(t, testGrpcAddr)
 
 	id := gofakeit.ID()
 
@@ -245,6 +245,23 @@ func Test_ClientUpdateReturnsErrorIfClientDoesNotExist(t *testing.T) {
 		Id:   id,
 		Name: gofakeit.AppName(),
 	})
-	assert.Error(t, err, "update client")
-	assert.Equal(t, err.Error(), "client "+id+" not found", "client not found")
+	assert.Error(t, err)
+	assert.Equal(t, err.Error(), "client "+id+" not found")
+}
+
+func TestDexClient(t *testing.T) {
+	t.Run("dex.ClientCreate successfully creates client", clientCreateReturnsClient)
+	t.Run("dex.ClientCreate returns error if Dex server is unreachable", clientCreateReturnsErrorIfConnectionFails)
+	t.Run("dex.ClientCreate returns error if client already exist", clientCreateReturnsErrorIfClientAlreadyExists)
+	t.Run("dex.ClientDelete successfully deletes client", clientDeleteReturnsClient)
+	t.Run("dex.ClientDelete returns error if Dex server is unreachable", clientDeleteReturnsErrorIfConnectionFails)
+	t.Run("dex.ClientDelete returns error if client does not exist", clientDeleteReturnsErrorIfClientDoesNotExist)
+	t.Run("dex.ClientGet sucessfully returns client", clientGetReturnsClient)
+	t.Run("dex.ClientGet returns error if Dex server is unreachable", clientGetReturnsErrorIfConnectionFails)
+	t.Run("dex.ClientGet returns error if client does not exist", clientGetReturnsErrorIfClientDoesNotExist)
+	t.Run("dex.ClientList successfully returns clients", clientListReturnsClients)
+	t.Run("dex.ClientList returns error if Dex server is unreachable", clientListReturnsErrorIfConnectionFails)
+	t.Run("dex.ClientUpdate successfully updates client", clientUpdateSucceeds)
+	t.Run("dex.ClientUpdate returns error if Dex server is unreachable", clientUpdateReturnsErrorIfConnectionFails)
+	t.Run("dex.ClientUpdate returns error if client does not exist", clientUpdateReturnsErrorIfClientDoesNotExist)
 }

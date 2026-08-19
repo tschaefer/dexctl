@@ -19,7 +19,7 @@ const testCaPath = "../../hack/dex/etc/tls/ca-crt.pem"
 const testGrpcAddr = "127.0.0.1:5557"
 const testNoAddr = "127.0.0.1:0"
 
-func connectDex(t *testing.T, grpcAddr string) *Dex {
+func __connectDex(t *testing.T, grpcAddr string) *Dex {
 	_, tls := os.LookupEnv("DEX_TLS")
 
 	if tls {
@@ -39,26 +39,26 @@ func connectDex(t *testing.T, grpcAddr string) *Dex {
 	return dex
 }
 
-func Test_VersionReturnsVersion(t *testing.T) {
-	dex := connectDex(t, testGrpcAddr)
+func versionReturnsVersion(t *testing.T) {
+	dex := __connectDex(t, testGrpcAddr)
 
 	version, err := dex.Version()
-	assert.NoError(t, err, "get version")
-	assert.NotNil(t, version, "version not nil")
+	assert.NoError(t, err)
+	assert.NotNil(t, version)
 
-	assert.IsType(t, &Version{}, version, "version is type Version")
+	assert.IsType(t, &Version{}, version)
 }
 
-func Test_VersionReturnsErrorIfConnectionFails(t *testing.T) {
-	dex := connectDex(t, testNoAddr)
+func versionReturnsErrorIfConnectionFails(t *testing.T) {
+	dex := __connectDex(t, testNoAddr)
 
 	version, err := dex.Version()
-	assert.Error(t, err, "get version")
-	assert.Nil(t, version, "version nil")
+	assert.Error(t, err)
+	assert.Nil(t, version)
 }
 
-func Test_DiscoveryReturnsDiscovery(t *testing.T) {
-	dex := connectDex(t, testGrpcAddr)
+func discoveryReturnsDiscovery(t *testing.T) {
+	dex := __connectDex(t, testGrpcAddr)
 
 	discovery, err := dex.Discovery()
 	assert.NoError(t, err, "get discovery")
@@ -67,10 +67,17 @@ func Test_DiscoveryReturnsDiscovery(t *testing.T) {
 	assert.IsType(t, &Discovery{}, discovery, "discovery is type Discovery")
 }
 
-func Test_DiscoveryReturnsErrorIfConnectionFails(t *testing.T) {
-	dex := connectDex(t, testNoAddr)
+func discoveryReturnsErrorIfConnectionFails(t *testing.T) {
+	dex := __connectDex(t, testNoAddr)
 
 	discovery, err := dex.Discovery()
 	assert.Error(t, err, "get discovery")
 	assert.Nil(t, discovery, "discovery nil")
+}
+
+func TestDexBase(t *testing.T) {
+	t.Run("dex.Version returns Dex server and API version", versionReturnsVersion)
+	t.Run("dex.Version returns error if Dex server not reachable", versionReturnsErrorIfConnectionFails)
+	t.Run("dex.Discovery returns Dex server metadata", discoveryReturnsDiscovery)
+	t.Run("dex.Discovery returns error if Dex server not reachable", discoveryReturnsErrorIfConnectionFails)
 }

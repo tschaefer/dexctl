@@ -11,8 +11,8 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func Test_UserCreateSucceeds(t *testing.T) {
-	dex := connectDex(t, testGrpcAddr)
+func userCreateSucceeds(t *testing.T) {
+	dex := __connectDex(t, testGrpcAddr)
 
 	err := dex.UserCreate(&User{
 		Email:    gofakeit.Email(),
@@ -20,21 +20,21 @@ func Test_UserCreateSucceeds(t *testing.T) {
 		UserId:   gofakeit.UUID(),
 		Password: gofakeit.Password(true, false, false, false, false, 32),
 	})
-	assert.NoError(t, err, "create user")
+	assert.NoError(t, err)
 }
 
-func Test_UserCreateReturnsErrorIfConnectionFails(t *testing.T) {
-	dex := connectDex(t, testNoAddr)
+func userCreateReturnsErrorIfConnectionFails(t *testing.T) {
+	dex := __connectDex(t, testNoAddr)
 
 	err := dex.UserCreate(&User{
 		Email:  gofakeit.Email(),
 		UserId: gofakeit.UUID(),
 	})
-	assert.Error(t, err, "create user")
+	assert.Error(t, err)
 }
 
-func Test_UserCreateReturnsErrorIfUserAlreadyExists(t *testing.T) {
-	dex := connectDex(t, testGrpcAddr)
+func userCreateReturnsErrorIfUserAlreadyExists(t *testing.T) {
+	dex := __connectDex(t, testGrpcAddr)
 
 	email := gofakeit.Email()
 	username := gofakeit.Username()
@@ -58,11 +58,11 @@ func Test_UserCreateReturnsErrorIfUserAlreadyExists(t *testing.T) {
 		Password: password,
 	})
 	assert.Error(t, err, "create user")
-	assert.Equal(t, err.Error(), "user "+email+" already exists", "user already exists")
+	assert.Equal(t, err.Error(), "user "+email+" already exists")
 }
 
-func Test_UserDeleteSucceeds(t *testing.T) {
-	dex := connectDex(t, testGrpcAddr)
+func userDeleteSucceeds(t *testing.T) {
+	dex := __connectDex(t, testGrpcAddr)
 
 	email := gofakeit.Email()
 
@@ -75,28 +75,28 @@ func Test_UserDeleteSucceeds(t *testing.T) {
 	}
 
 	err = dex.UserDelete(email)
-	assert.NoError(t, err, "delete user")
+	assert.NoError(t, err)
 }
 
-func Test_UserDeleteReturnsErrorIfConnectionFails(t *testing.T) {
-	dex := connectDex(t, testNoAddr)
+func userDeleteReturnsErrorIfConnectionFails(t *testing.T) {
+	dex := __connectDex(t, testNoAddr)
 
 	err := dex.UserDelete(gofakeit.Email())
-	assert.Error(t, err, "delete user")
+	assert.Error(t, err)
 }
 
-func Test_UserDeleteReturnsErrorIfUserDoesNotExist(t *testing.T) {
-	dex := connectDex(t, testGrpcAddr)
+func userDeleteReturnsErrorIfUserDoesNotExist(t *testing.T) {
+	dex := __connectDex(t, testGrpcAddr)
 
 	email := gofakeit.Email()
 
 	err := dex.UserDelete(email)
 	assert.Error(t, err, "delete user")
-	assert.Equal(t, err.Error(), "user "+email+" not found", "user not found")
+	assert.Equal(t, err.Error(), "user "+email+" not found")
 }
 
-func Test_UserListReturnsUsers(t *testing.T) {
-	dex := connectDex(t, testGrpcAddr)
+func userListReturnsUsers(t *testing.T) {
+	dex := __connectDex(t, testGrpcAddr)
 
 	userCount := 10
 	for range userCount {
@@ -111,19 +111,19 @@ func Test_UserListReturnsUsers(t *testing.T) {
 
 	users, err := dex.UserList()
 	assert.NoError(t, err, "list users")
-	assert.GreaterOrEqual(t, len(*users), userCount, "users count not null")
+	assert.GreaterOrEqual(t, len(*users), userCount)
 }
 
-func Test_UserListReturnsErrorIfConnectionFails(t *testing.T) {
-	dex := connectDex(t, testNoAddr)
+func userListReturnsErrorIfConnectionFails(t *testing.T) {
+	dex := __connectDex(t, testNoAddr)
 
 	users, err := dex.UserList()
-	assert.Error(t, err, "list users")
-	assert.Nil(t, users, "users nil")
+	assert.Error(t, err)
+	assert.Nil(t, users)
 }
 
-func Test_UserUpdateSucceeds(t *testing.T) {
-	dex := connectDex(t, testGrpcAddr)
+func userUpdateSucceeds(t *testing.T) {
+	dex := __connectDex(t, testGrpcAddr)
 
 	email := gofakeit.Email()
 	username := gofakeit.Username()
@@ -144,21 +144,21 @@ func Test_UserUpdateSucceeds(t *testing.T) {
 		Email:    email,
 		Username: newUsername,
 	})
-	assert.NoError(t, err, "update user")
+	assert.NoError(t, err)
 }
 
-func Test_UserUpdateReturnsErrorIfConnectionFails(t *testing.T) {
-	dex := connectDex(t, testNoAddr)
+func userUpdateReturnsErrorIfConnectionFails(t *testing.T) {
+	dex := __connectDex(t, testNoAddr)
 
 	err := dex.UserUpdate(&User{
 		Email:  gofakeit.Email(),
 		UserId: gofakeit.UUID(),
 	})
-	assert.Error(t, err, "update user")
+	assert.Error(t, err)
 }
 
-func Test_UserUpdateReturnsErrorIfUserDoesNotExist(t *testing.T) {
-	dex := connectDex(t, testGrpcAddr)
+func userUpdateReturnsErrorIfUserDoesNotExist(t *testing.T) {
+	dex := __connectDex(t, testGrpcAddr)
 
 	email := gofakeit.Email()
 
@@ -167,11 +167,11 @@ func Test_UserUpdateReturnsErrorIfUserDoesNotExist(t *testing.T) {
 		UserId: gofakeit.UUID(),
 	})
 	assert.Error(t, err, "update user")
-	assert.Equal(t, err.Error(), "user "+email+" not found", "user not found")
+	assert.Equal(t, err.Error(), "user "+email+" not found")
 }
 
-func Test_UserVerifyPasswordReturnsFalseIfPasswordIsCorrect(t *testing.T) {
-	dex := connectDex(t, testGrpcAddr)
+func userVerifyPasswordReturnsTrueIfPasswordIsCorrect(t *testing.T) {
+	dex := __connectDex(t, testGrpcAddr)
 
 	email := gofakeit.Email()
 	password := gofakeit.Password(true, false, false, false, false, 32)
@@ -187,28 +187,28 @@ func Test_UserVerifyPasswordReturnsFalseIfPasswordIsCorrect(t *testing.T) {
 	}
 
 	verified, err := dex.UserVerifyPassword(email, password)
-	assert.True(t, verified, "verify password")
-	assert.NoError(t, err, "verify password")
+	assert.True(t, verified)
+	assert.NoError(t, err)
 }
 
-func Test_UserVerifyPasswordReturnsErrorIfConnectionFails(t *testing.T) {
-	dex := connectDex(t, testNoAddr)
+func userVerifyPasswordReturnsErrorIfConnectionFails(t *testing.T) {
+	dex := __connectDex(t, testNoAddr)
 
 	verified, err := dex.UserVerifyPassword(gofakeit.Email(), gofakeit.Password(true, false, false, false, false, 32))
-	assert.False(t, verified, "verify password")
-	assert.Error(t, err, "verify password")
+	assert.False(t, verified)
+	assert.Error(t, err)
 }
 
-func Test_UserVerifyPasswordReturnsErrorIfUserDoesNotExist(t *testing.T) {
-	dex := connectDex(t, testGrpcAddr)
+func userVerifyPasswordReturnsErrorIfUserDoesNotExist(t *testing.T) {
+	dex := __connectDex(t, testGrpcAddr)
 
 	verified, err := dex.UserVerifyPassword(gofakeit.Email(), gofakeit.Password(true, false, false, false, false, 32))
-	assert.False(t, verified, "verify password")
-	assert.Error(t, err, "verify password")
+	assert.False(t, verified)
+	assert.Error(t, err)
 }
 
-func Test_UserVerifyPasswordReturnsFalseIfPasswordIsIncorrect(t *testing.T) {
-	dex := connectDex(t, testGrpcAddr)
+func userVerifyPasswordReturnsFalseIfPasswordIsIncorrect(t *testing.T) {
+	dex := __connectDex(t, testGrpcAddr)
 
 	email := gofakeit.Email()
 	password := gofakeit.Password(true, false, false, false, false, 32)
@@ -224,6 +224,24 @@ func Test_UserVerifyPasswordReturnsFalseIfPasswordIsIncorrect(t *testing.T) {
 	}
 
 	verified, err := dex.UserVerifyPassword(email, gofakeit.Password(true, false, false, false, false, 32))
-	assert.False(t, verified, "verify password")
-	assert.NoError(t, err, "verify password")
+	assert.False(t, verified)
+	assert.NoError(t, err)
+}
+
+func TestDexUser(t *testing.T) {
+	t.Run("dex.UserCreate successfully creates user", userCreateSucceeds)
+	t.Run("dex.UserCreate returns error if Dex server is unreachable", userCreateReturnsErrorIfConnectionFails)
+	t.Run("dex.UserCreate returns error if user already exists", userCreateReturnsErrorIfUserAlreadyExists)
+	t.Run("dex.UserDelete successfully deletes user", userDeleteSucceeds)
+	t.Run("dex.UserDelete returns error if Dex server is unreachable", userDeleteReturnsErrorIfConnectionFails)
+	t.Run("dex.UserDelete returns error if user does not exist", userDeleteReturnsErrorIfUserDoesNotExist)
+	t.Run("dex.UserList successfully returns user", userListReturnsUsers)
+	t.Run("dex.UserList returns error if Dex server is unreachable", userListReturnsErrorIfConnectionFails)
+	t.Run("dex.UserUpdate successfully updates user", userUpdateSucceeds)
+	t.Run("dex.UserUpdate returns error if Dex is unreachable", userUpdateReturnsErrorIfConnectionFails)
+	t.Run("dex.UserUpdate returns error if use does not exist", userUpdateReturnsErrorIfUserDoesNotExist)
+	t.Run("dex.UserVerifyPassword returns true if password is correct", userVerifyPasswordReturnsTrueIfPasswordIsCorrect)
+	t.Run("dex.UserVerifyPassword returns false if password is incorrect", userVerifyPasswordReturnsFalseIfPasswordIsIncorrect)
+	t.Run("dex.UserVerifyPassword returns error if Dex is unreachable", userVerifyPasswordReturnsErrorIfConnectionFails)
+	t.Run("dex.UserVerifyPassword returns err if user does not exist", userVerifyPasswordReturnsErrorIfUserDoesNotExist)
 }
